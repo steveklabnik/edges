@@ -1,8 +1,14 @@
+extern crate edges;
+
 #[cfg(test)]
 extern crate hamcrest;
 
-mod edges;
+use edges::{
+    eval,
+    Constant,
+    Value,
+};
 
 fn main() {
-    println!("hello, world");
+    println!("{}", eval(Constant(Value(5))));
 }
