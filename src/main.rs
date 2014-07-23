@@ -4,8 +4,9 @@ use edges::{
     eval,
     Constant,
     Value,
+    Env,
 };
 
 fn main() {
-    println!("{}", eval(Constant(Value(5))));
+    println!("{}", eval(Constant(Value(5)), Env::new()));
 }
