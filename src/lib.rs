@@ -3,24 +3,16 @@ extern crate hamcrest;
 
 use std::collections::HashMap;
 
-#[deriving(PartialEq)]
-#[deriving(Show)]
-#[deriving(Clone)]
+#[deriving(PartialEq,Show,Clone)]
 pub struct Value(pub int);
 
-#[deriving(PartialEq)]
-#[deriving(Show)]
-#[deriving(Clone)]
+#[deriving(PartialEq,Show,Clone)]
 pub enum Exp {
     Constant(Value),
     Symbol(Name),
 }
 
-#[deriving(PartialEq)]
-#[deriving(Show)]
-#[deriving(Clone)]
-#[deriving(Hash)]
-#[deriving(Eq)]
+#[deriving(PartialEq,Show,Clone,Hash,Eq)]
 pub struct Name(pub String);
 
 #[deriving(Clone)]
