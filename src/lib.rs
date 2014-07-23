@@ -66,6 +66,19 @@ pub fn eval(exp: Exp, env: &mut Env) -> Exp {
     }
 }
 
+pub fn tokenize(program: String) -> Vec<String> {
+    let mut program = program;
+
+    program = std::str::replace(program.as_slice(), "(", " ( ");
+    program = std::str::replace(program.as_slice(), ")", " ) ");
+
+    program.as_slice()
+        .split(' ')
+        .filter(|s| *s != "") // we have to remove the extras
+        .map(|s| s.to_string())
+        .collect()
+}
+
 #[cfg(test)]
 mod test {
     use hamcrest::{assert_that, equal_to, is};
@@ -78,6 +91,7 @@ mod test {
         Name,
         Begin,
         Set,
+        tokenize,
     };
 
     #[test]
@@ -127,6 +141,22 @@ mod test {
         let begin = Begin(vec![set, symbol]);
 
         assert_that(eval(begin, &mut Env::new()), is(equal_to(constant)));
+    }
+
+    #[test]
+    fn test_tokenize() {
+        let program = "(set! twox (* x 2))".to_string();
+        let tokenized = vec!["(".to_string(),
+            "set!".to_string(),
+            "twox".to_string(),
+            "(".to_string(),
+            "*".to_string(),
+            "x".to_string(),
+            "2".to_string(),
+            ")".to_string(),
+            ")".to_string()];
+
+        assert_that(tokenize(program), is(equal_to(tokenized)));
     }
 }
 
