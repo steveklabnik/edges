@@ -173,5 +173,15 @@ mod test {
 
         assert!(res.is_err());
     }
+
+    #[test]
+    fn test_read_from_lparen() {
+        let res = task::try(proc() {
+            read_from(vec![")".to_string()]);
+        });
+
+        assert!(res.is_err());
+    }
+
 }
 
