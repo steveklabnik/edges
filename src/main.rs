@@ -8,5 +8,5 @@ use edges::{
 };
 
 fn main() {
-    println!("{}", eval(Constant(Value(5)), Env::new()));
+    println!("{}", eval(Constant(Value(5)), &mut Env::new()));
 }

@@ -11,6 +11,7 @@ pub enum Exp {
     Constant(Value),
     Symbol(Name),
     Begin(Vec<Box<Exp>>),
+    Set(Name, Box<Exp>),
 }
 
 #[deriving(PartialEq,Show,Clone,Hash,Eq)]
@@ -34,23 +35,33 @@ impl Env {
         self.map.find(k)
     }
 
-    pub fn locate(&self, k: Name) -> &Env {
-        self
+    pub fn locate(&mut self, k: Name) -> &mut Env {
+        self // TODO: find outer envs
     }
 }
 
-pub fn eval(exp: Exp, env: Env) -> Exp {
+pub fn eval(exp: Exp, env: &mut Env) -> Exp {
     match exp {
         Constant(val) => Constant(val),
-        Symbol(name) => Constant(*env.locate(name.clone()).find(&name).unwrap()),
+        Symbol(name) => Constant(*(env.clone()).locate(name.clone()).find(&name).unwrap()),
         Begin(vec) => {
             let mut result = Constant(Value(0i)); // FIXME: probably should be 
                                                   // an iterator?
             for e in vec.iter() {
-                result = eval(*e.clone(), env.clone())
+                result = eval(*e.clone(), env)
             }
 
             result
+        },
+        Set(name, exp) => {
+            let result = match eval(*exp, env) {
+                Constant(Value(name)) => Value(name),
+                _ => fail!("Not a value, bub"),
+            };
+
+            env.locate(name.clone()).insert(name, result);
+
+            Constant(result)
         },
     }
 }
@@ -68,13 +79,14 @@ mod test {
         Symbol,
         Name,
         Begin,
+        Set,
     };
 
     #[test]
     fn test_eval_constant() {
         let exp = Constant(Value(5));
 
-        assert_that(eval(exp.clone(), Env::new()), is(equal_to(exp)));
+        assert_that(eval(exp.clone(), &mut Env::new()), is(equal_to(exp)));
     }
 
     #[test]
@@ -96,7 +108,7 @@ mod test {
         
         let exp = Symbol(name);
 
-        assert_that(eval(exp.clone(), env.clone()), is(equal_to(Constant(value))));
+        assert_that(eval(exp.clone(), env), is(equal_to(Constant(value))));
     }
 
     #[test]
@@ -104,7 +116,19 @@ mod test {
         let constant = Constant(Value(5));
         let begin = Begin(vec![box constant.clone(), box constant.clone()]);
 
-        assert_that(eval(begin, Env::new()), is(equal_to(constant)));
+        assert_that(eval(begin, &mut Env::new()), is(equal_to(constant)));
+    }
+
+    #[test]
+    fn test_eval_set() {
+        let name = Name("Foo".to_string());
+        let constant = Constant(Value(5));
+        let set = box Set(name.clone(), box constant.clone());
+        let symbol = box Symbol(name);
+
+        let begin = Begin(vec![set, symbol]);
+
+        assert_that(eval(begin, &mut Env::new()), is(equal_to(constant)));
     }
 }
 
