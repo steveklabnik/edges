@@ -10,6 +10,7 @@ pub struct Value(pub int);
 pub enum Exp {
     Constant(Value),
     Symbol(Name),
+    Begin(Vec<Box<Exp>>),
 }
 
 #[deriving(PartialEq,Show,Clone,Hash,Eq)]
@@ -42,6 +43,15 @@ pub fn eval(exp: Exp, env: Env) -> Exp {
     match exp {
         Constant(val) => Constant(val),
         Symbol(name) => Constant(*env.locate(name.clone()).find(&name).unwrap()),
+        Begin(vec) => {
+            let mut result = Constant(Value(0i)); // FIXME: probably should be 
+                                                  // an iterator?
+            for e in vec.iter() {
+                result = eval(*e.clone(), env.clone())
+            }
+
+            result
+        },
     }
 }
 
@@ -49,12 +59,15 @@ pub fn eval(exp: Exp, env: Env) -> Exp {
 mod test {
     use hamcrest::{assert_that, equal_to, is};
     use {
-        Constant,
         Value,
         eval,
         Env,
         Name,
+        Exp,
+        Constant,
         Symbol,
+        Name,
+        Begin,
     };
 
     #[test]
@@ -84,6 +97,14 @@ mod test {
         let exp = Symbol(name);
 
         assert_that(eval(exp.clone(), env.clone()), is(equal_to(Constant(value))));
+    }
+
+    #[test]
+    fn test_eval_begin() {
+        let constant = Constant(Value(5));
+        let begin = Begin(vec![box constant.clone(), box constant.clone()]);
+
+        assert_that(eval(begin, Env::new()), is(equal_to(constant)));
     }
 }
 
