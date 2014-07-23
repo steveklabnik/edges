@@ -79,8 +79,23 @@ pub fn tokenize(program: String) -> Vec<String> {
         .collect()
 }
 
-pub fn read_from(tokens: Vec<String>) -> Exp {
-    fail!("lol")
+pub fn read_from(tokens: &mut Vec<String>) -> Exp {
+    if tokens.len() == 0 {
+        fail!("unexpected EOF while reading");
+    }
+
+    let token = tokens.pop().unwrap(); // we just checked from len() == 0
+
+    if token.as_slice() == ")" {
+        fail!("unexpected )");
+    }
+    
+    let number: Option<int> = from_str(token.as_slice());
+
+    match number {
+        Some(num) => Constant(Value(num)),
+        None => fail!("lol"),
+    }
 }
 
 #[cfg(test)]
@@ -168,7 +183,7 @@ mod test {
     #[test]
     fn test_read_from_zero() {
         let res = task::try(proc() {
-            read_from(vec![]);
+            read_from(&mut vec![]);
         });
 
         assert!(res.is_err());
@@ -177,11 +192,17 @@ mod test {
     #[test]
     fn test_read_from_lparen() {
         let res = task::try(proc() {
-            read_from(vec![")".to_string()]);
+            read_from(&mut vec![")".to_string()]);
         });
 
         assert!(res.is_err());
     }
 
+    #[test]
+    fn test_read_from_atom() {
+        let atom = read_from(&mut vec!["5".to_string()]);
+
+        assert_that(atom, is(equal_to(Constant(Value(5)))));
+    }
 }
 
