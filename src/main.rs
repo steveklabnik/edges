@@ -1,8 +1,5 @@
 extern crate edges;
 
-#[cfg(test)]
-extern crate hamcrest;
-
 use edges::{
     eval,
     Constant,
