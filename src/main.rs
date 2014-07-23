@@ -1,5 +1,6 @@
 extern crate edges;
 
+#[cfg(not(test))]
 use edges::{
     eval,
     Constant,
@@ -7,6 +8,7 @@ use edges::{
     Env,
 };
 
+#[cfg(not(test))]
 fn main() {
     println!("{}", eval(Constant(Value(5)), &mut Env::new()));
 }
