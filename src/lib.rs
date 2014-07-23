@@ -73,8 +73,6 @@ mod test {
         Value,
         eval,
         Env,
-        Name,
-        Exp,
         Constant,
         Symbol,
         Name,
