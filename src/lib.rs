@@ -79,6 +79,10 @@ pub fn tokenize(program: String) -> Vec<String> {
         .collect()
 }
 
+pub fn read_from(tokens: Vec<String>) -> Exp {
+    fail!("lol")
+}
+
 #[cfg(test)]
 mod test {
     use hamcrest::{assert_that, equal_to, is};
@@ -92,7 +96,9 @@ mod test {
         Begin,
         Set,
         tokenize,
+        read_from,
     };
+    use std::task;
 
     #[test]
     fn test_eval_constant() {
@@ -157,6 +163,15 @@ mod test {
             ")".to_string()];
 
         assert_that(tokenize(program), is(equal_to(tokenized)));
+    }
+
+    #[test]
+    fn test_read_from_zero() {
+        let res = task::try(proc() {
+            read_from(vec![]);
+        });
+
+        assert!(res.is_err());
     }
 }
 
