@@ -7,6 +7,10 @@ A port of [Peter Norvig's Lispy](http://norvig.com/lispy.html) in Rust.
 It's called Edges because Rust has sharp edges, and `()`s kinda look like the
 edge of something. I'm bad at names.
 
+There are some annoying bits about the way that Lispy uses dynamic types, and so
+it's kinda hard to port over directly. I might try porting a different Lisp
+instead or just totally writing my own.
+
 ## Building
 
 ```bash
@@ -17,3 +21,4 @@ $ ./target/edges "(+ 1 1)"
 ```
 
 This doens't currently actually work. We'll get there.
+
