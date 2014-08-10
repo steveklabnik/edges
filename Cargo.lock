@@ -1,0 +1,12 @@
+[root]
+name = "edges"
+version = "0.1.0"
+dependencies = [
+ "hamcrest 0.1.0 (git+https://github.com/carllerche/hamcrest-rust.git#c23b8769f20f306c59a96b22532bb09b33faa764)",
+]
+
+[[package]]
+name = "hamcrest"
+version = "0.1.0"
+source = "git+https://github.com/carllerche/hamcrest-rust.git#c23b8769f20f306c59a96b22532bb09b33faa764"
+
