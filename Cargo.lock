@@ -2,11 +2,11 @@
 name = "edges"
 version = "0.1.0"
 dependencies = [
- "hamcrest 0.1.0 (git+https://github.com/carllerche/hamcrest-rust.git#f0fd1546b0a7a278a12658ab8602b5c827cc3a42)",
+ "hamcrest 0.1.0 (git+https://github.com/carllerche/hamcrest-rust.git#49061a2134d9112b8622d54587590f324b97cc98)",
 ]
 
 [[package]]
 name = "hamcrest"
 version = "0.1.0"
-source = "git+https://github.com/carllerche/hamcrest-rust.git#f0fd1546b0a7a278a12658ab8602b5c827cc3a42"
+source = "git+https://github.com/carllerche/hamcrest-rust.git#49061a2134d9112b8622d54587590f324b97cc98"
 
