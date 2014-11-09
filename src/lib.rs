@@ -56,7 +56,7 @@ pub fn eval(exp: Exp, env: &mut Env) -> Exp {
         Set(name, exp) => {
             let result = match eval(*exp, env) {
                 Constant(Value(name)) => Value(name),
-                _ => fail!("Not a value, bub"),
+                _ => panic!("Not a value, bub"),
             };
 
             env.locate(name.clone()).insert(name, result);
@@ -81,20 +81,20 @@ pub fn tokenize(program: String) -> Vec<String> {
 
 pub fn read_from(tokens: &mut Vec<String>) -> Exp {
     if tokens.len() == 0 {
-        fail!("unexpected EOF while reading");
+        panic!("unexpected EOF while reading");
     }
 
     let token = tokens.pop().unwrap(); // we just checked from len() == 0
 
     if token.as_slice() == ")" {
-        fail!("unexpected )");
+        panic!("unexpected )");
     }
     
     let number: Option<int> = from_str(token.as_slice());
 
     match number {
         Some(num) => Constant(Value(num)),
-        None => fail!("lol"),
+        None => panic!("lol"),
     }
 }
 
