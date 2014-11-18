@@ -1,3 +1,5 @@
+#![feature(tuple_indexing)]
+
 #[cfg(test)]
 extern crate hamcrest;
 
@@ -28,40 +30,40 @@ impl Env {
     }
 
     pub fn insert(&mut self, key: Name, value: Value) -> bool {
-        self.map.insert(key, value)
+        self.map.insert(key, value).unwrap().0 == 0
     }
 
     pub fn find(&self, k: &Name) -> Option<&Value> {
-        self.map.find(k)
+        self.map.get(k)
     }
 
-    pub fn locate(&mut self, k: Name) -> &mut Env {
+    pub fn locate(&mut self, _: Name) -> &mut Env {
         self // TODO: find outer envs
     }
 }
 
 pub fn eval(exp: Exp, env: &mut Env) -> Exp {
     match exp {
-        Constant(val) => Constant(val),
-        Symbol(name) => Constant(*(env.clone()).locate(name.clone()).find(&name).unwrap()),
-        Begin(vec) => {
-            let mut result = Constant(Value(0i)); // FIXME: probably should be 
-                                                  // an iterator?
+        Exp::Constant(val) => Exp::Constant(val),
+        Exp::Symbol(name) => Exp::Constant(*(env.clone()).locate(name.clone()).find(&name).unwrap()),
+        Exp::Begin(vec) => {
+            let mut result = Exp::Constant(Value(0i)); // FIXME: probably should be 
+                                                       // an iterator?
             for e in vec.iter() {
                 result = eval(*e.clone(), env)
             }
 
             result
         },
-        Set(name, exp) => {
+        Exp::Set(name, exp) => {
             let result = match eval(*exp, env) {
-                Constant(Value(name)) => Value(name),
+                Exp::Constant(Value(name)) => Value(name),
                 _ => panic!("Not a value, bub"),
             };
 
             env.locate(name.clone()).insert(name, result);
 
-            Constant(result)
+            Exp::Constant(result)
         },
     }
 }
@@ -93,7 +95,7 @@ pub fn read_from(tokens: &mut Vec<String>) -> Exp {
     let number: Option<int> = from_str(token.as_slice());
 
     match number {
-        Some(num) => Constant(Value(num)),
+        Some(num) => Exp::Constant(Value(num)),
         None => panic!("lol"),
     }
 }
