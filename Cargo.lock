@@ -8,5 +8,5 @@ dependencies = [
 [[package]]
 name = "hamcrest"
 version = "0.1.0"
-source = "git+https://github.com/carllerche/hamcrest-rust.git#2b9bd6cdae5dcf08acac84371fe889dc8eb5c528"
+source = "git+https://github.com/carllerche/hamcrest-rust.git#4ae58daf0b3a853ffd3109e63f94d43e8e623769"
 
