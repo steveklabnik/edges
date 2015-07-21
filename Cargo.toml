@@ -4,6 +4,3 @@ name = "edges"
 version = "0.1.0"
 authors = [ "steve@steveklabnik.com" ]
 
-[dependencies.hamcrest]
-
-git = "https://github.com/carllerche/hamcrest-rust.git"
